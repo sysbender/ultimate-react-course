@@ -3,13 +3,18 @@ import ReactDOM from "react-dom/client";
 import { pizzaData } from "./data.js";
 import "./index.css";
 // import ReactDOM from "react-dom";
-function Pizza() {
+function Pizza(props) {
+  const p = props.pizzaObj;
+
   return (
-    <div>
-      <img src={pizzaData[0].photoName} alt={pizzaData[0].name} />
-      <h3>{pizzaData[0].name}</h3>
-      <p>{pizzaData[0].ingredients}</p>
-    </div>
+    <li className="pizza">
+      <img src={p.photoName} alt={p.name} />
+      <div>
+        <h3>{p.name}</h3>
+        <p>{p.ingredients}</p>
+        <p> {p.price} </p>
+      </div>
+    </li>
   );
 }
 
@@ -34,9 +39,11 @@ function Menu() {
   return (
     <main className="menu">
       <h2>Our Menu</h2>
-      <Pizza />
-      <Pizza />
-      <Pizza />
+      <ul className="pizzas">
+        {pizzaData.map((pizza) => (
+          <Pizza pizzaObj={pizza} key={pizza.name} />
+        ))}
+      </ul>
     </main>
   );
 }
