@@ -1,12 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { pizzaData } from "./data.js";
+import "./index.css";
 // import ReactDOM from "react-dom";
 function Pizza() {
   return (
     <div>
       <img src={pizzaData[0].photoName} alt={pizzaData[0].name} />
-      <h2>{pizzaData[0].name}</h2>
+      <h3>{pizzaData[0].name}</h3>
       <p>{pizzaData[0].ingredients}</p>
     </div>
   );
@@ -23,21 +24,25 @@ function App() {
 }
 
 function Header() {
-  return <h1>Fast React Pizza Co.</h1>;
+  return (
+    <header className="header">
+      <h1>Fast React Pizza Co.</h1>
+    </header>
+  );
 }
 function Menu() {
   return (
-    <div>
+    <main className="menu">
       <h2>Our Menu</h2>
       <Pizza />
       <Pizza />
       <Pizza />
-    </div>
+    </main>
   );
 }
 function Footer() {
   return (
-    <footer>
+    <footer className="footer">
       <p>&copy; 2023 React Pizza. All rights reserved.</p>
     </footer>
   );
