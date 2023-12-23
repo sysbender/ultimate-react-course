@@ -3,16 +3,14 @@ import ReactDOM from "react-dom/client";
 import { pizzaData } from "./data.js";
 import "./index.css";
 // import ReactDOM from "react-dom";
-function Pizza(props) {
-  const p = props.pizzaObj;
-
+function Pizza({ pizzaObj }) {
   return (
     <li className="pizza">
-      <img src={p.photoName} alt={p.name} />
+      <img src={pizzaObj.photoName} alt={pizzaObj.name} />
       <div>
-        <h3>{p.name}</h3>
-        <p>{p.ingredients}</p>
-        <p> {p.price} </p>
+        <h3>{pizzaObj.name}</h3>
+        <p>{pizzaObj.ingredients}</p>
+        <p> {pizzaObj.price} </p>
       </div>
     </li>
   );
