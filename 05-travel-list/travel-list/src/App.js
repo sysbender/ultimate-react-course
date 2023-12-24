@@ -130,6 +130,8 @@ function PackingList({ items, onDeleteItem, onToggleItem }) {
         case "packed":
           console.log("#################### sorted by packed");
           return Number(a.packed) - Number(b.packed);
+        default:
+          return 0;
       } //switch
     });
   }
