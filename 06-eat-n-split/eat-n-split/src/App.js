@@ -33,7 +33,7 @@ export default function App() {
       <div className="sidebar">
         <FriendsList friendsList={friendsList} />
 
-        <FormAddFriend showAddFriend={showAddFriend} />
+        {showAddFriend && <FormAddFriend />}
         <Button onClick={handleShowAddFriend}>
           {showAddFriend ? "Close" : "Add Friend"}
         </Button>
@@ -95,10 +95,7 @@ function FriendsList({ friendsList }) {
   );
 }
 
-function FormAddFriend({ showAddFriend }) {
-  if (!showAddFriend) {
-    return "";
-  }
+function FormAddFriend() {
   return (
     <form className="form-add-friend">
       <label>Friend name</label>
