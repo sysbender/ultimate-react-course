@@ -46,49 +46,22 @@ export default function App() {
           </p>
 
           <div className="buttons">
-            {/* <button
+            <button
               onClick={handlerPrev}
               style={{ backgroundColor: "#7950f2", color: "#fff" }}
             >
               previous
-            </button> */}
-            <Button
-              textColor={"#fff"}
-              bgColor={"#7950f2"}
-              onClickHandler={handlerPrev}
-            >
-              <span>👈</span> Previous
-            </Button>
-
-            <Button
-              textColor={"#fff"}
-              bgColor={"#7950f2"}
-              onClickHandler={handlerNext}
-            >
-              next<span>👉</span>{" "}
-            </Button>
-
-            {/* <button
+            </button>
+            <button
               onClick={handlerNext}
               style={{ backgroundColor: "#7950f2", color: "#fff" }}
             >
               next
-            </button> */}
+            </button>
           </div>
         </div>
       )}
       <DateCounter />
     </>
-  );
-}
-
-function Button({ textColor, bgColor, onClickHandler, children }) {
-  return (
-    <button
-      onClick={onClickHandler}
-      style={{ backgroundColor: bgColor, color: textColor }}
-    >
-      {children}
-    </button>
   );
 }
