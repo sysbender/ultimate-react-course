@@ -34,6 +34,7 @@ export default function App() {
           : { ...friend }
       )
     );
+    setSelectedFriend(null);
   }
 
   function handleSelectFriend(friend) {
