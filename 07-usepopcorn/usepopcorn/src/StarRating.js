@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 const containerSytle = {
   display: "flex",
   alignItems: "center",
@@ -9,6 +10,12 @@ const starContainerStyle = {
   display: "flex",
 };
 
+StarRating.propTypes = {
+  maxRating: PropTypes.number,
+  color: PropTypes.string,
+  cbOnSetRating: PropTypes.func,
+  messages: PropTypes.array,
+};
 export default function StarRating({
   maxRating = 5,
   color = "#fcc419",
