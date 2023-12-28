@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import StarRating from "./StarRating";
 
 const tempMovieData = [
   {
@@ -221,6 +222,7 @@ export default function App() {
   function handleCloseMovieDetails() {
     setSelectedId(null);
   }
+
   const url = `http://www.omdbapi.com/?apikey=${apiKey}&s=${query}`;
   async function fetchMovie() {
     try {
@@ -278,7 +280,6 @@ export default function App() {
             />
           ) : (
             <>
-              {" "}
               <WatchedSummary watched={watched} />
               <WatchedMovieList watched={watched} />
             </>
@@ -298,12 +299,64 @@ function ErrorMessage({ children }) {
 }
 
 function MovieDetails({ selectedId, handleCloseMovieDetails }) {
+  const [movieDetails, setMovieDetails] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  async function fetchMovieDetails() {
+    setIsLoading(true);
+    try {
+      const url = `http://www.omdbapi.com/?i=${selectedId}&apikey=${apiKey}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      setMovieDetails(data); //setData here
+    } catch (e) {
+      console.log("Failed to fetch movie detail :", e.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(
+    function () {
+      if (!selectedId) return;
+      fetchMovieDetails();
+    },
+    [selectedId]
+  );
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
-    <div className="details">
-      <button className="btn-back" onClick={handleCloseMovieDetails}>
-        &larr;
-      </button>
-      {selectedId}
-    </div>
+    movieDetails && (
+      <div className="details">
+        <header>
+          <button className="btn-back" onClick={handleCloseMovieDetails}>
+            &larr;
+          </button>
+          <img src={movieDetails.Poster} alt={movieDetails.Title} />
+          <div className="details-overview">
+            <h2>{movieDetails.Title}</h2>
+            <p>
+              {movieDetails.Released} &bull; {movieDetails.Runtime}
+            </p>
+            <p>{movieDetails.Genre}</p>
+            <p>
+              <span>⭐</span> {movieDetails.imdbRating} IMDB Rating
+            </p>
+          </div>
+        </header>
+
+        <section>
+          <div className="rating">
+            <StarRating maxRating={10} size={24} />
+          </div>
+          <p>
+            <em>{movieDetails.Plot}</em>
+          </p>
+          <p>Starring {movieDetails.Actors}</p>
+          <p>Directed by {movieDetails.Director}</p>
+        </section>
+      </div>
+    )
   );
 }
