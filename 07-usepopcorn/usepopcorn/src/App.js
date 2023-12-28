@@ -387,6 +387,17 @@ function MovieDetails({
     },
     [selectedId]
   );
+
+  useEffect(
+    function () {
+      document.title = movieDetails.Title;
+      return () => {
+        document.title = "usePopcorn";
+      };
+    },
+    [movieDetails]
+  );
+
   if (isLoading) {
     return <Loader />;
   }
