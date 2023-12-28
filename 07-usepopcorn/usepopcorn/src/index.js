@@ -18,14 +18,14 @@ function MyMovieRating() {
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <App />
-    {/* <StarRating
-      maxRating={5}
-      messages={["Terrible", "Bad", "Okay", "Good", "Amazing"]}
-      defaultRating={3}
-    />
-    <StarRating maxRating={10} color={"red"} size={24} className={"test"} />
-    <MyMovieRating /> */}
-  </React.StrictMode>
+  // <React.StrictMode>
+  <App />
+  // {/* <StarRating
+  //   maxRating={5}
+  //   messages={["Terrible", "Bad", "Okay", "Good", "Amazing"]}
+  //   defaultRating={3}
+  // />
+  // <StarRating maxRating={10} color={"red"} size={24} className={"test"} />
+  // <MyMovieRating /> */}
+  // </React.StrictMode>
 );
