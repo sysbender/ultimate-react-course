@@ -267,25 +267,12 @@ export default function App() {
   }
 
   const url = `http://www.omdbapi.com/?apikey=${apiKey}&s=${query}`;
-  async function fetchMovie() {
-    try {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("Fetch failed, check internet connection");
-
-      const data = await res.json();
-      // console.log(data.Search);
-      // console.log(errorMsg);
-      if (data.Response === "False") throw new Error("Movie not found");
-      setMovies(data.Search);
-    } catch (err) {
-      setErrorMsg(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   useEffect(
     function () {
+      const abortController = new AbortController();
+      const signal = abortController.signal;
+
       if (query.length < 3) {
         setMovies([]);
         setErrorMsg("");
@@ -295,7 +282,31 @@ export default function App() {
       setIsLoading(true);
       setErrorMsg("");
 
+      async function fetchMovie() {
+        try {
+          const res = await fetch(url, { signal });
+          if (!res.ok)
+            throw new Error("Fetch failed, check internet connection");
+
+          const data = await res.json();
+          // console.log(data.Search);
+          // console.log(errorMsg);
+          if (data.Response === "False") throw new Error("Movie not found");
+          setMovies(data.Search);
+        } catch (err) {
+          if (err.name !== "AbortError") {
+            setErrorMsg(err.message);
+          } else {
+            console.log(" aborted fetch... ... ");
+          }
+        } finally {
+          setIsLoading(false);
+        }
+      }
       fetchMovie();
+      return () => {
+        abortController.abort();
+      };
     },
     [query]
   );
