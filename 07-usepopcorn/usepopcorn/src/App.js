@@ -266,8 +266,6 @@ export default function App() {
     setSelectedId(null);
   }
 
-  const url = `http://www.omdbapi.com/?apikey=${apiKey}&s=${query}`;
-
   useEffect(
     function () {
       const abortController = new AbortController();
@@ -283,6 +281,7 @@ export default function App() {
       setErrorMsg("");
 
       async function fetchMovie() {
+        const url = `http://www.omdbapi.com/?apikey=${apiKey}&s=${query}`;
         try {
           const res = await fetch(url, { signal });
           if (!res.ok)
@@ -303,6 +302,7 @@ export default function App() {
           setIsLoading(false);
         }
       }
+      handleCloseMovieDetails();
       fetchMovie();
       return () => {
         abortController.abort();
@@ -367,22 +367,22 @@ function MovieDetails({
   const [userRating, setUserRating] = useState(null);
   const [userExistingRating, setUserExsitingRating] = useState(null);
 
-  async function fetchMovieDetails() {
-    setIsLoading(true);
-    try {
-      const url = `http://www.omdbapi.com/?i=${selectedId}&apikey=${apiKey}`;
-      const res = await fetch(url);
-      const data = await res.json();
-      setMovieDetails(data); //setData here
-    } catch (e) {
-      console.log("Failed to fetch movie detail :", e.message);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
   useEffect(
     function () {
+      async function fetchMovieDetails() {
+        setIsLoading(true);
+        try {
+          const url = `http://www.omdbapi.com/?i=${selectedId}&apikey=${apiKey}`;
+          const res = await fetch(url);
+          const data = await res.json();
+          setMovieDetails(data); //setData here
+        } catch (e) {
+          console.log("Failed to fetch movie detail :", e.message);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+
       if (!selectedId) return;
       fetchMovieDetails();
     },
@@ -396,7 +396,7 @@ function MovieDetails({
       setUserExsitingRating(existRating);
       console.log("exisiting rating ===", existRating);
     },
-    [selectedId]
+    [selectedId, getExistingUserRating]
   );
 
   useEffect(
@@ -407,6 +407,25 @@ function MovieDetails({
       };
     },
     [movieDetails]
+  );
+
+  useEffect(
+    function () {
+      function handleEscKeyDown(e) {
+        console.log(e);
+        if (e.key === "Escape") {
+          console.log("esc pressed");
+          handleCloseMovieDetails();
+        }
+      }
+
+      document.addEventListener("keydown", handleEscKeyDown);
+      return () => {
+        document.removeEventListener("keydown", handleEscKeyDown);
+      };
+    },
+
+    [handleCloseMovieDetails]
   );
 
   if (isLoading) {
