@@ -143,15 +143,15 @@ function WatchedSummary({ watched }) {
         </p>
         <p>
           <span>⭐️</span>
-          <span>{avgImdbRating}</span>
+          <span>{avgImdbRating.toFixed(2)}</span>
         </p>
         <p>
           <span>🌟</span>
-          <span>{avgUserRating}</span>
+          <span>{avgUserRating.toFixed(2)}</span>
         </p>
         <p>
           <span>⏳</span>
-          <span>{avgRuntime} min</span>
+          <span>{avgRuntime.toFixed(2)} min</span>
         </p>
       </div>
     </div>
@@ -199,7 +199,7 @@ const average = (arr) =>
 export default function App() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState([]);
+  const [watched, setWatched] = useState(tempWatchedData);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [selectedId, setSelectedId] = useState(null);
@@ -214,6 +214,49 @@ export default function App() {
   //   console.log("B");
   // });
   // console.log("C");
+  function getExistingUserRating(id) {
+    const found = watched.find((m) => m.imdbID === id);
+
+    console.log("find existing =", found);
+    if (!found) return 0;
+    return found.userRating;
+  }
+
+  function handleAddWatchedMovie(userRating, movieDetails) {
+    // imdbID: "tt0088763",
+    // Title: "Back to the Future",
+    // Year: "1985",
+    // Poster:
+    //   "https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg",
+    // runtime: 116,
+    // imdbRating: 8.5,
+    // userRating: 9,
+    if (watched.find((m) => m.imdbID === movieDetails.imdbID)) {
+      console.log("Failed to add to watch, already exist");
+      return;
+    }
+
+    const { imdbID, Title, Year, Poster, imdbRating } = movieDetails;
+    const newWatchedMovie = {
+      imdbID,
+      Title,
+      Year,
+      Poster,
+      imdbRating,
+      userRating,
+      runtime: Number.parseInt(movieDetails.Runtime),
+    };
+
+    console.log(newWatchedMovie);
+    setWatched((watchedMovies) => [...watchedMovies, newWatchedMovie]);
+  }
+
+  function handleDeleteWatchedMovie(id) {
+    console.log("deleting====", id);
+    setWatched((oldWatched) =>
+      oldWatched.filter((movie) => movie.imdbID !== id)
+    );
+  }
 
   function handleSelectMovie(id) {
     setSelectedId((currentId) => (currentId === id ? null : id));
@@ -276,6 +319,9 @@ export default function App() {
           {selectedId ? (
             <MovieDetails
               handleCloseMovieDetails={handleCloseMovieDetails}
+              handleAddWatchedMovie={handleAddWatchedMovie}
+              handleDeleteWatchedMovie={handleDeleteWatchedMovie}
+              getExistingUserRating={getExistingUserRating}
               selectedId={selectedId}
             />
           ) : (
@@ -298,9 +344,18 @@ function ErrorMessage({ children }) {
   return <p className="error"> {children}</p>;
 }
 
-function MovieDetails({ selectedId, handleCloseMovieDetails }) {
+function MovieDetails({
+  selectedId,
+  handleCloseMovieDetails,
+  handleAddWatchedMovie,
+  handleDeleteWatchedMovie,
+  getExistingUserRating,
+}) {
   const [movieDetails, setMovieDetails] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [userRating, setUserRating] = useState(null);
+  const [userExistingRating, setUserExsitingRating] = useState(null);
+
   async function fetchMovieDetails() {
     setIsLoading(true);
     try {
@@ -319,6 +374,16 @@ function MovieDetails({ selectedId, handleCloseMovieDetails }) {
     function () {
       if (!selectedId) return;
       fetchMovieDetails();
+    },
+    [selectedId]
+  );
+
+  useEffect(
+    function () {
+      const existRating = getExistingUserRating(selectedId);
+
+      setUserExsitingRating(existRating);
+      console.log("exisiting rating ===", existRating);
     },
     [selectedId]
   );
@@ -348,8 +413,35 @@ function MovieDetails({ selectedId, handleCloseMovieDetails }) {
 
         <section>
           <div className="rating">
-            <StarRating maxRating={10} size={24} />
+            <StarRating
+              maxRating={10}
+              size={24}
+              defaultRating={userExistingRating}
+              cbOnSetRating={(r) => setUserRating(r)}
+            />
           </div>
+          {!userExistingRating ? (
+            <button
+              className="btn-add"
+              onClick={() => {
+                handleAddWatchedMovie(userRating, movieDetails);
+
+                handleCloseMovieDetails();
+              }}
+            >
+              Add to watched list
+            </button>
+          ) : (
+            <button
+              className="btn-delete"
+              onClick={() => {
+                handleDeleteWatchedMovie(movieDetails.imdbID);
+                handleCloseMovieDetails();
+              }}
+            >
+              X
+            </button>
+          )}
           <p>
             <em>{movieDetails.Plot}</em>
           </p>
