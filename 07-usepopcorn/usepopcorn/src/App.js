@@ -81,9 +81,14 @@ function NumResult({ movies }) {
 function NavBar({ children }) {
   return <nav className="nav-bar">{children}</nav>;
 }
-function Movie({ movie }) {
+function Movie({ movie, handleSelectMovie }) {
   return (
-    <li key={movie.imdbID}>
+    <li
+      key={movie.imdbID}
+      onClick={(e) => {
+        handleSelectMovie(movie.imdbID);
+      }}
+    >
       <img src={movie.Poster} alt={`${movie.Title} poster`} />
       <h3>{movie.Title}</h3>
       <div>
@@ -95,11 +100,15 @@ function Movie({ movie }) {
     </li>
   );
 }
-function MovieList({ movies }) {
+function MovieList({ movies, handleSelectMovie }) {
   return (
-    <ul className="list">
+    <ul className="list list-movies">
       {movies?.map((movie) => (
-        <Movie movie={movie} key={movie.imdbID} />
+        <Movie
+          handleSelectMovie={handleSelectMovie}
+          movie={movie}
+          key={movie.imdbID}
+        />
       ))}
     </ul>
   );
@@ -192,6 +201,7 @@ export default function App() {
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [selectedId, setSelectedId] = useState(null);
 
   let tempQuery = "interstellar";
   // query = "jfasjdfkjas";
@@ -204,6 +214,13 @@ export default function App() {
   // });
   // console.log("C");
 
+  function handleSelectMovie(id) {
+    setSelectedId((currentId) => (currentId === id ? null : id));
+  }
+
+  function handleCloseMovieDetails() {
+    setSelectedId(null);
+  }
   const url = `http://www.omdbapi.com/?apikey=${apiKey}&s=${query}`;
   async function fetchMovie() {
     try {
@@ -211,8 +228,8 @@ export default function App() {
       if (!res.ok) throw new Error("Fetch failed, check internet connection");
 
       const data = await res.json();
-      console.log(data.Search);
-      console.log(errorMsg);
+      // console.log(data.Search);
+      // console.log(errorMsg);
       if (data.Response === "False") throw new Error("Movie not found");
       setMovies(data.Search);
     } catch (err) {
@@ -249,11 +266,23 @@ export default function App() {
         <Box>
           {isLoading && <Loader />}
           {errorMsg !== "" && <ErrorMessage> {errorMsg}</ErrorMessage>}
-          {!isLoading && !errorMsg && <MovieList movies={movies} />}
+          {!isLoading && !errorMsg && (
+            <MovieList handleSelectMovie={handleSelectMovie} movies={movies} />
+          )}
         </Box>
         <Box>
-          <WatchedSummary watched={watched} />
-          <WatchedMovieList watched={watched} />
+          {selectedId ? (
+            <MovieDetails
+              handleCloseMovieDetails={handleCloseMovieDetails}
+              selectedId={selectedId}
+            />
+          ) : (
+            <>
+              {" "}
+              <WatchedSummary watched={watched} />
+              <WatchedMovieList watched={watched} />
+            </>
+          )}
         </Box>
       </Main>
     </>
@@ -266,4 +295,15 @@ function Loader() {
 
 function ErrorMessage({ children }) {
   return <p className="error"> {children}</p>;
+}
+
+function MovieDetails({ selectedId, handleCloseMovieDetails }) {
+  return (
+    <div className="details">
+      <button className="btn-back" onClick={handleCloseMovieDetails}>
+        &larr;
+      </button>
+      {selectedId}
+    </div>
+  );
 }
