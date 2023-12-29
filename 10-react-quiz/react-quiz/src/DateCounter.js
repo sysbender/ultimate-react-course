@@ -1,7 +1,25 @@
-import { useState } from "react";
+import { useState, useReducer } from "react";
+
+function reducer(state, action) {
+  console.log({ state, action });
+
+  switch (action.type) {
+    case "inc":
+      return state + action.payload;
+    case "dec":
+      return state - action.payload;
+    case "set":
+      return action.payload;
+    default:
+      throw new Error("Action type not supported");
+  }
+
+  // return state + action;
+}
 
 function DateCounter() {
-  const [count, setCount] = useState(0);
+  //const [count, setCount] = useState(0);
+  const [count, dispatch] = useReducer(reducer, 0);
 
   const [step, setStep] = useState(1);
 
@@ -11,16 +29,19 @@ function DateCounter() {
 
   const dec = function () {
     // setCount((count) => count - 1);
-    setCount((count) => count - step);
+    // setCount((count) => count - step);
+    dispatch({ type: "dec", payload: step });
   };
 
   const inc = function () {
     // setCount((count) => count + 1);
-    setCount((count) => count + step);
+    // setCount((count) => count + step);
+    dispatch({ type: "inc", payload: step });
   };
 
   const defineCount = function (e) {
-    setCount(Number(e.target.value));
+    // setCount(Number(e.target.value));
+    dispatch({ type: "set", payload: Number(e.target.value) });
   };
 
   const defineStep = function (e) {
@@ -28,7 +49,8 @@ function DateCounter() {
   };
 
   const reset = function () {
-    setCount(0);
+    // setCount(0);
+    dispatch({ type: "set", payload: 0 });
     setStep(1);
   };
 
