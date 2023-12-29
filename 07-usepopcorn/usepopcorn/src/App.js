@@ -404,6 +404,7 @@ function MovieDetails({
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState(null);
   const [userExistingRating, setUserExsitingRating] = useState(null);
+  const ratingHistory = useRef([]);
 
   useEffect(
     function () {
@@ -427,6 +428,15 @@ function MovieDetails({
     [selectedId]
   );
 
+  useEffect(
+    function () {
+      if (userRating) {
+        ratingHistory.current.push(userRating);
+        console.log("ratingHistory = ", ratingHistory.current);
+      }
+    },
+    [userRating]
+  );
   useEffect(
     function () {
       const existRating = getExistingUserRating(selectedId);
@@ -496,7 +506,9 @@ function MovieDetails({
               maxRating={10}
               size={24}
               defaultRating={userExistingRating}
-              cbOnSetRating={(r) => setUserRating(r)}
+              cbOnSetRating={(r) => {
+                setUserRating(r);
+              }}
             />
           </div>
           {!userExistingRating ? (
