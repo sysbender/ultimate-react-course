@@ -33,6 +33,7 @@ function useMovies(query) {
           // console.log(errorMsg);
           if (data.Response === "False") throw new Error("Movie not found");
           setMovies(data.Search);
+          console.log("succeeded fetching movie");
         } catch (err) {
           if (err.name !== "AbortError") {
             setErrorMsg(err.message);
