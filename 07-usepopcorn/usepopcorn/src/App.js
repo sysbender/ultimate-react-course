@@ -199,10 +199,17 @@ const average = (arr) =>
 export default function App() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState(tempWatchedData);
+
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [selectedId, setSelectedId] = useState(null);
+
+  const [watched, setWatched] = useState(() => getWatchedFromLocalStorage());
+
+  function getWatchedFromLocalStorage() {
+    console.log("-----------------------  getWatchedFromLocalStorage");
+    return JSON.parse(localStorage.getItem("watched"));
+  }
 
   let tempQuery = "interstellar";
   // query = "jfasjdfkjas";
@@ -223,14 +230,6 @@ export default function App() {
   }
 
   function handleAddWatchedMovie(userRating, movieDetails) {
-    // imdbID: "tt0088763",
-    // Title: "Back to the Future",
-    // Year: "1985",
-    // Poster:
-    //   "https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg",
-    // runtime: 116,
-    // imdbRating: 8.5,
-    // userRating: 9,
     if (watched.find((m) => m.imdbID === movieDetails.imdbID)) {
       console.log("Failed to add to watch, already exist");
       return;
@@ -247,8 +246,12 @@ export default function App() {
       runtime: Number.parseInt(movieDetails.Runtime),
     };
 
-    console.log(newWatchedMovie);
-    setWatched((watchedMovies) => [...watchedMovies, newWatchedMovie]);
+    setWatched((watchedMovies) => {
+      const updatedWatched = [...watchedMovies, newWatchedMovie];
+      // console.log("save to local storage =", updatedWatched.length);
+      // localStorage.setItem("watched", JSON.stringify(updatedWatched));
+      return updatedWatched;
+    });
   }
 
   function handleDeleteWatchedMovie(id) {
@@ -265,6 +268,14 @@ export default function App() {
   function handleCloseMovieDetails() {
     setSelectedId(null);
   }
+  // save watched to localstorage
+  useEffect(
+    function () {
+      console.log("save to local storage == ", watched.length);
+      localStorage.setItem("watched", JSON.stringify(watched));
+    },
+    [watched]
+  );
 
   useEffect(
     function () {
