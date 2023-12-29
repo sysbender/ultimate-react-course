@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import StarRating from "./StarRating";
 import { useMovies } from "./useMovies";
 import { useStorageState } from "./useStorageState";
-
+import { useKey } from "./useKey";
 const tempMovieData = [
   {
     imdbID: "tt1375666",
@@ -65,25 +65,13 @@ function Search({ query, setQuery }) {
   const elSearch = useRef(null);
   // const [query, setQuery] = useState("");
 
-  useEffect(
-    function () {
-      function handleEnter(e) {
-        if (e.key === "Enter") {
-          if (document.activeElement === elSearch.current) {
-            return;
-          }
-          elSearch.current.focus();
-          setQuery("");
-        }
-      }
-
-      document.addEventListener("keydown", handleEnter);
-      return () => {
-        document.removeEventListener("keydown", handleEnter);
-      };
-    },
-    [setQuery]
-  );
+  useKey("Enter", function () {
+    if (document.activeElement === elSearch.current) {
+      return;
+    }
+    elSearch.current.focus();
+    setQuery("");
+  });
 
   useEffect(function () {
     elSearch.current.focus();
@@ -269,8 +257,7 @@ export default function App() {
 
     setWatched((watchedMovies) => {
       const updatedWatched = [...watchedMovies, newWatchedMovie];
-      // console.log("save to local storage =", updatedWatched.length);
-      // localStorage.setItem("watched", JSON.stringify(updatedWatched));
+
       return updatedWatched;
     });
   }
@@ -291,14 +278,6 @@ export default function App() {
   }
 
   useStorageState(watched, "watched");
-  // // save watched to localstorage
-  // useEffect(
-  //   function () {
-  //     console.log("save to local storage == ", watched.length);
-  //     localStorage.setItem("watched", JSON.stringify(watched));
-  //   },
-  //   [watched]
-  // );
 
   return (
     <>
@@ -357,6 +336,8 @@ function MovieDetails({
   const [userExistingRating, setUserExsitingRating] = useState(null);
   const ratingHistory = useRef([]);
 
+  useKey("Escape", handleCloseMovieDetails);
+
   useEffect(
     function () {
       async function fetchMovieDetails() {
@@ -406,25 +387,6 @@ function MovieDetails({
       };
     },
     [movieDetails]
-  );
-
-  useEffect(
-    function () {
-      function handleEscKeyDown(e) {
-        console.log(e);
-        if (e.key === "Escape") {
-          console.log("esc pressed");
-          handleCloseMovieDetails();
-        }
-      }
-
-      document.addEventListener("keydown", handleEscKeyDown);
-      return () => {
-        document.removeEventListener("keydown", handleEscKeyDown);
-      };
-    },
-
-    [handleCloseMovieDetails]
   );
 
   if (isLoading) {
