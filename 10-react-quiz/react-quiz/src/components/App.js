@@ -9,6 +9,8 @@ import Question from "./Question";
 import NextButton from "./NextButton";
 import Progress from "./Progress";
 import FinishScreen from "./FinishScreen";
+import Footer from "./Footer";
+import Timer from "./Timer";
 
 const initialState = {
   questions: [],
@@ -18,6 +20,8 @@ const initialState = {
   answer: null,
   points: 0,
   highScore: 0,
+  endSeconds: 0,
+  secondsLeft: 0,
 };
 
 function reducer(state, action) {
@@ -27,7 +31,10 @@ function reducer(state, action) {
     case "dataFailed":
       return { ...state, status: "error" };
     case "start":
-      return { ...state, status: "active" };
+      // set endTime and timeLeft
+      const duration = 10 * state.questions.length;
+      const endSeconds = Math.ceil(new Date().getTime() / 1000 + duration);
+      return { ...state, status: "active", endSeconds, secondsLeft: duration };
     case "newAnswer":
       const question = state.questions.at(state.index);
       const answer = action.payload;
@@ -46,18 +53,45 @@ function reducer(state, action) {
       return { ...state, status: "finished", highScore: newHighScore };
     case "restart":
       return {
-        ...initialState,
+        ...state,
         status: "ready",
+        index: 0,
+        highScore: 0,
+        answer: null,
+        points: 0,
       };
 
+    case "updateTimer":
+      const currentSeconds = Math.ceil(new Date().getTime() / 1000);
+      if (currentSeconds >= state.endSeconds) {
+        const newHighScore = Math.max(state.points, state.highScore);
+        return { ...state, status: "finished", highScore: newHighScore };
+      } else {
+        const secondsLeft = state.endSeconds - currentSeconds;
+        return { ...state, secondsLeft };
+      }
+
     default:
-      throw new Error("Action type is not valid");
+      const msg = `Action type is not valid ${action.type}`;
+      console.log(msg);
+      throw new Error(msg);
   }
 }
 
 export default function App() {
-  const [{ questions, status, index, answer, points, highScore }, dispatch] =
-    useReducer(reducer, initialState);
+  const [
+    {
+      questions,
+      status,
+      index,
+      answer,
+      points,
+      highScore,
+      endSeconds,
+      secondsLeft,
+    },
+    dispatch,
+  ] = useReducer(reducer, initialState);
   const numQuestions = questions.length;
   const maxPossiblePoints = questions.reduce((previous, current, idx) => {
     return previous + current.points;
@@ -102,12 +136,15 @@ export default function App() {
               dispatch={dispatch}
               answer={answer}
             />
-            <NextButton
-              dispatch={dispatch}
-              answer={answer}
-              index={index}
-              numQuestions={numQuestions}
-            />
+            <Footer>
+              <Timer secondsLeft={secondsLeft} dispatch={dispatch} />
+              <NextButton
+                dispatch={dispatch}
+                answer={answer}
+                index={index}
+                numQuestions={numQuestions}
+              />
+            </Footer>
           </>
         )}
         {status === "finished" && (
