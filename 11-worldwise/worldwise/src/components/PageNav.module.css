@@ -1,0 +1,13 @@
+.nav {
+  background-color: goldenrod;
+}
+/*  must use class, selector will apply to whole application instead of component */
+.nav ul {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+}
+
+.nav :global(.active) {
+  background-color: red;
+}
