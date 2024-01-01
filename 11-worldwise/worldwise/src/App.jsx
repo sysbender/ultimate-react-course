@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import CityList from "./components/CityList";
 import City from "./components/City";
 import CountryList from "./components/CountryList";
+import Form from "./components/Form";
 import { useState, useEffect } from "react";
 
 function App() {
@@ -53,7 +54,7 @@ function App() {
             element={<CityList cities={cities} isLoading={isLoading} />}
           />
           <Route path="cities/:id" element={<City />} />
-          <Route path="form" element={<p> form placeholder </p>} />
+          <Route path="form" element={<Form />} />
         </Route>
         <Route path="login" element={<Login />} />
         <Route path="*" element={<PageNotFound />} />
