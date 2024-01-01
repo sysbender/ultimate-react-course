@@ -5,8 +5,14 @@
   overflow-y: scroll;
   overflow-x: hidden;
 
-  display: grid;
+  /* display: grid;
   grid-template-columns: 1fr 1fr;
-  align-content: start;
-  gap: 1.6rem;
+  align-content: start; */
+  display: flex;
+  flex-direction: column;
+  gap: 1.2 rem;
+}
+
+.countryList::-webkit-scrollbar {
+  width: 0;
 }

@@ -1,4 +1,5 @@
 import styles from "./CityItem.module.css";
+import { Link } from "react-router-dom";
 /* eslint-disable react/prop-types */ // TODO: upgrade to latest eslint tooling
 const formatDate = (date) =>
   new Intl.DateTimeFormat("en", {
@@ -16,14 +17,19 @@ export function convertToEmoji(countryCode) {
 }
 
 function CityItem({ city }) {
-  const { cityName, emoji, date } = city;
+  const { cityName, emoji, date, id, position } = city;
   console.log(emoji);
   return (
-    <li className={styles.cityItem}>
-      <span className={styles.emoji}> {emoji}</span>
-      <h3 className={styles.name}>{cityName}</h3>
-      <time className={styles.date}> {formatDate(date)} </time>
-      <button className={styles.deleteBtn}> &times;</button>
+    <li>
+      <Link
+        className={styles.cityItem}
+        to={`${id}?lat=${position.lat}&lng=${position.lng}`}
+      >
+        <span className={styles.emoji}> {emoji}</span>
+        <h3 className={styles.name}>{cityName}</h3>
+        <time className={styles.date}> {formatDate(date)} </time>
+        <button className={styles.deleteBtn}> &times;</button>
+      </Link>
     </li>
   );
 }
