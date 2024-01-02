@@ -2,8 +2,10 @@ import Spinner from "./Spinner";
 import styles from "./CityList.module.css";
 import CityItem from "./CityItem";
 import Message from "./Message";
+import { useCities } from "./CitiesProvider";
 /* eslint-disable react/prop-types */ // TODO: upgrade to latest eslint tooling
-function CityList({ cities, isLoading }) {
+function CityList() {
+  const { cities, isLoading } = useCities();
   console.log("in citylist========== , isloading=", isLoading);
   console.log(cities);
   if (isLoading) {

@@ -2,8 +2,10 @@ import Spinner from "./Spinner";
 import styles from "./CountryList.module.css";
 import CountryItem from "./CountryItem";
 import Message from "./Message";
+import { useCities } from "./CitiesProvider";
 /* eslint-disable react/prop-types */ // TODO: upgrade to latest eslint tooling
-function CountryList({ cities, isLoading }) {
+function CountryList() {
+  const { cities, isLoading } = useCities();
   //   const countrySet = new Set();
   //   const countries = [];
   //   cities.forEach((city) => {
