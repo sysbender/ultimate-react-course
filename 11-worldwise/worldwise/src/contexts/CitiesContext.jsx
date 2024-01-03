@@ -25,6 +25,30 @@ function CitiesProvider({ children }) {
     }
   }
 
+  async function createCity(city) {
+    console.warn("******************** loading");
+    setIsLoading(true);
+    const url = `http://localhost:8000/cities`;
+    console.log("get current city data=", url);
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(city),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      setCities((cities) => [...cities, city]);
+      console.log("create a new city =", data);
+    } catch (err) {
+      console.error(" Error = ", err.message);
+    } finally {
+      setIsLoading(false);
+      console.warn("******************** loaded");
+    }
+  }
+
   useEffect(function () {
     async function fetchCities() {
       setIsLoading(true);
@@ -46,13 +70,20 @@ function CitiesProvider({ children }) {
 
   return (
     <CitiesContext.Provider
-      value={{ cities, isLoading, getCity, currentCity, setCurrentCity }}
+      value={{
+        cities,
+        isLoading,
+        getCity,
+        currentCity,
+        setCurrentCity,
+        createCity,
+      }}
     >
       {children}
     </CitiesContext.Provider>
   );
 }
-
+// custom hook for using context
 function useCities() {
   const context = useContext(CitiesContext);
   console.log("context=", context);

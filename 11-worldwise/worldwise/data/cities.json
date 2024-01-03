@@ -35,6 +35,102 @@
         "lng": 13.376933665713324
       },
       "id": 98443197
+    },
+    {
+      "cityName": "Castello de la Plana",
+      "country": "Spain",
+      "emoji": "🇪🇸",
+      "date": "2024-01-03T15:07:41.016Z",
+      "notes": "test",
+      "position": {
+        "lat": "39.99303510458468",
+        "lng": "-0.0005149841308593751"
+      },
+      "id": 98443198
+    },
+    {
+      "cityName": "Montreal",
+      "country": "Canada",
+      "emoji": "🇨🇦",
+      "date": "2024-01-03T15:07:41.016Z",
+      "notes": "test",
+      "position": {
+        "lat": "45.476743971804",
+        "lng": "-73.60960006713869"
+      },
+      "id": 98443199
+    },
+    {
+      "cityName": "Montreal",
+      "country": "Canada",
+      "emoji": "🇨🇦",
+      "date": "2024-01-03T15:09:12.923Z",
+      "notes": "test2",
+      "position": {
+        "lat": "45.46085305860483",
+        "lng": "-73.54745864868165"
+      },
+      "id": 98443200
+    },
+    {
+      "cityName": "Castello de la Plana",
+      "country": "Spain",
+      "emoji": "🇪🇸",
+      "date": "2024-01-03T15:12:49.100Z",
+      "notes": "testtest",
+      "position": {
+        "lat": "39.999215966720165",
+        "lng": "0.025062561035156253"
+      },
+      "id": 98443201
+    },
+    {
+      "cityName": "Castello de la Plana",
+      "country": "Spain",
+      "emoji": "🇪🇸",
+      "date": "2024-01-03T15:14:09.503Z",
+      "notes": "test",
+      "position": {
+        "lat": "39.99855845478553",
+        "lng": "0.02145767211914063"
+      },
+      "id": 98443202
+    },
+    {
+      "cityName": "Castello de la Plana",
+      "country": "Spain",
+      "emoji": "🇪🇸",
+      "date": "2024-01-03T15:18:21.492Z",
+      "notes": "test",
+      "position": {
+        "lat": "39.98093477655269",
+        "lng": "0.02008438110351563"
+      },
+      "id": 98443203
+    },
+    {
+      "cityName": "San Felipe",
+      "country": "Mexico",
+      "emoji": "🇲🇽",
+      "date": "2024-01-03T15:20:58.850Z",
+      "notes": "test",
+      "position": {
+        "lat": "21.616579336740603",
+        "lng": "-101.25000000000001"
+      },
+      "id": 98443204
+    },
+    {
+      "cityName": "North Okeechobee",
+      "country": "United States of America (the)",
+      "emoji": "🇺🇸",
+      "date": "2024-01-03T15:24:21.356Z",
+      "notes": "test",
+      "position": {
+        "lat": "27.52775820686191",
+        "lng": "-81.03515625000001"
+      },
+      "id": 98443205
     }
   ]
 }
