@@ -49,6 +49,25 @@ function CitiesProvider({ children }) {
     }
   }
 
+  async function deleteCity(id) {
+    console.warn("******************** loading");
+    setIsLoading(true);
+    const url = `http://localhost:8000/cities/${id}`;
+    console.log("get current city data=", url);
+    try {
+      await fetch(url, {
+        method: "DELETE",
+      });
+
+      setCities((cities) => cities.filter((city) => city.id !== id));
+    } catch (err) {
+      console.error(" Error = ", err.message);
+    } finally {
+      setIsLoading(false);
+      console.warn("******************** loaded");
+    }
+  }
+
   useEffect(function () {
     async function fetchCities() {
       setIsLoading(true);
@@ -77,6 +96,7 @@ function CitiesProvider({ children }) {
         currentCity,
         setCurrentCity,
         createCity,
+        deleteCity,
       }}
     >
       {children}
