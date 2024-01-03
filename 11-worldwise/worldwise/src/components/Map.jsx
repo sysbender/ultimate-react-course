@@ -26,8 +26,8 @@ function Map() {
   const [mapPosition, setMapPosition] = useState([40, 0]);
   const mapLat = searchParams.get("lat") || 40;
   const mapLng = searchParams.get("lng") || 0;
-  console.log("map center====", { mapLat, mapLng });
 
+  console.log("cities in map==========", cities);
   useEffect(
     function () {
       if (mapLat && mapLng) {
