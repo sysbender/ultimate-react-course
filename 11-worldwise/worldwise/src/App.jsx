@@ -13,6 +13,7 @@ import Form from "./components/Form";
 
 import { CitiesProvider, useCities } from "./contexts/CitiesContext";
 import { AuthProvider } from "./contexts/FakeAuthContext";
+import ProtectedRoute from "./pages/ProtectedRoute";
 
 function App() {
   return (
